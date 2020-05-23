@@ -163,7 +163,7 @@ def testval(config, test_dataset, testloader, model,
                 config.TRAIN.IGNORE_LABEL)
 
             if sv_pred:
-                sv_path = os.path.join(sv_dir,'test_val_results')
+                sv_path = os.path.join(sv_dir, 'test_val_results')
                 if not os.path.exists(sv_path):
                     os.mkdir(sv_path)
                 test_dataset.save_pred(pred, sv_path, name)

@@ -2,7 +2,9 @@ CUDNN:
   BENCHMARK: true
   DETERMINISTIC: false
   ENABLED: true
-GPUS: (0, 1, 2, 3)
+GPUS: (0,1,2,3)
+#OUTPUT_DIR: '/home/data2/zhy/HRnet_face_parsing/tools/output'
+#LOG_DIR: '/home/data2/zhy/HRnet_face_parsing/tools/log'
 OUTPUT_DIR: 'output'
 LOG_DIR: 'log'
 WORKERS: 4
@@ -11,7 +13,7 @@ PRINT_FREQ: 100
 DATASET:
   DATASET: vschallenge
   ROOT: '/home/data2/DATASET/vschallenge'
-  TEST_SET: 'val'
+  TEST_SET: 'test'
   TRAIN_SET: 'train'
   NUM_CLASSES: 17
 MODEL:
@@ -96,6 +98,6 @@ TEST:
   - 480
   - 480
   BASE_SIZE: 520
-  BATCH_SIZE_PER_GPU: 1
+  BATCH_SIZE_PER_GPU: 4
   FLIP_TEST: false
   MULTI_SCALE: false

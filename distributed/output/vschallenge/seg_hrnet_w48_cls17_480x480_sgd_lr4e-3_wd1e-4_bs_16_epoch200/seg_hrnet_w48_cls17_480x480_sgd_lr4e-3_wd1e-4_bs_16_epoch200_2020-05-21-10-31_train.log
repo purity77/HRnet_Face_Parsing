@@ -1,0 +1,399 @@
+2020-05-21 10:31:52,265 Namespace(cfg='/home/data2/zhy/HRnet_face_parsing/experiments/vschallenge/seg_hrnet_w48_cls17_480x480_sgd_lr4e-3_wd1e-4_bs_16_epoch200.yaml', local_rank=1, opts=[])
+2020-05-21 10:31:52,266 Namespace(cfg='/home/data2/zhy/HRnet_face_parsing/experiments/vschallenge/seg_hrnet_w48_cls17_480x480_sgd_lr4e-3_wd1e-4_bs_16_epoch200.yaml', local_rank=3, opts=[])
+2020-05-21 10:31:52,266 AUTO_RESUME: False
+CUDNN:
+  BENCHMARK: True
+  DETERMINISTIC: False
+  ENABLED: True
+DATASET:
+  DATASET: vschallenge
+  EXTRA_TRAIN_SET: 
+  NUM_CLASSES: 17
+  ROOT: /home/data2/DATASET/vschallenge
+  TEST_SET: val
+  TRAIN_SET: train
+DEBUG:
+  DEBUG: False
+  SAVE_BATCH_IMAGES_GT: False
+  SAVE_BATCH_IMAGES_PRED: False
+  SAVE_HEATMAPS_GT: False
+  SAVE_HEATMAPS_PRED: False
+GPUS: (0, 1, 2, 3)
+LOG_DIR: /home/data2/zhy/HRnet_face_parsing/tools/log
+LOSS:
+  CLASS_BALANCE: True
+  OHEMKEEP: 131072
+  OHEMTHRES: 0.9
+  USE_OHEM: False
+MODEL:
+  EXTRA:
+    FINAL_CONV_KERNEL: 1
+    STAGE1:
+      BLOCK: BOTTLENECK
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4]
+      NUM_CHANNELS: [64]
+      NUM_MODULES: 1
+      NUM_RANCHES: 1
+    STAGE2:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4]
+      NUM_BRANCHES: 2
+      NUM_CHANNELS: [48, 96]
+      NUM_MODULES: 1
+    STAGE3:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4]
+      NUM_BRANCHES: 3
+      NUM_CHANNELS: [48, 96, 192]
+      NUM_MODULES: 4
+    STAGE4:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4, 4]
+      NUM_BRANCHES: 4
+      NUM_CHANNELS: [48, 96, 192, 384]
+      NUM_MODULES: 3
+  NAME: seg_hrnet
+  PRETRAINED: pretrained_models/hrnetv2_w48_imagenet_pretrained.pth
+OUTPUT_DIR: /home/data2/zhy/HRnet_face_parsing/tools/output
+PIN_MEMORY: True
+PRINT_FREQ: 100
+RANK: 0
+TEST:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 1
+  CENTER_CROP_TEST: False
+  FLIP_TEST: False
+  IMAGE_SIZE: [480, 480]
+  MODEL_FILE: 
+  MULTI_SCALE: False
+  NUM_SAMPLES: 0
+  SCALE_LIST: [1]
+TRAIN:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 4
+  BEGIN_EPOCH: 0
+  DOWNSAMPLERATE: 1
+  END_EPOCH: 200
+  EXTRA_EPOCH: 0
+  EXTRA_LR: 0.001
+  FLIP: True
+  IGNORE_LABEL: -1
+  IMAGE_SIZE: [480, 480]
+  LR: 0.004
+  LR_FACTOR: 0.1
+  LR_STEP: [90, 110]
+  MOMENTUM: 0.9
+  MULTI_SCALE: True
+  NESTEROV: False
+  NUM_SAMPLES: 0
+  OPTIMIZER: sgd
+  RESUME: True
+  SCALE_FACTOR: 16
+  SHUFFLE: True
+  WD: 0.0001
+WORKERS: 4
+2020-05-21 10:31:52,266 AUTO_RESUME: False
+CUDNN:
+  BENCHMARK: True
+  DETERMINISTIC: False
+  ENABLED: True
+DATASET:
+  DATASET: vschallenge
+  EXTRA_TRAIN_SET: 
+  NUM_CLASSES: 17
+  ROOT: /home/data2/DATASET/vschallenge
+  TEST_SET: val
+  TRAIN_SET: train
+DEBUG:
+  DEBUG: False
+  SAVE_BATCH_IMAGES_GT: False
+  SAVE_BATCH_IMAGES_PRED: False
+  SAVE_HEATMAPS_GT: False
+  SAVE_HEATMAPS_PRED: False
+GPUS: (0, 1, 2, 3)
+LOG_DIR: /home/data2/zhy/HRnet_face_parsing/tools/log
+LOSS:
+  CLASS_BALANCE: True
+  OHEMKEEP: 131072
+  OHEMTHRES: 0.9
+  USE_OHEM: False
+MODEL:
+  EXTRA:
+    FINAL_CONV_KERNEL: 1
+    STAGE1:
+      BLOCK: BOTTLENECK
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4]
+      NUM_CHANNELS: [64]
+      NUM_MODULES: 1
+      NUM_RANCHES: 1
+    STAGE2:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4]
+      NUM_BRANCHES: 2
+      NUM_CHANNELS: [48, 96]
+      NUM_MODULES: 1
+    STAGE3:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4]
+      NUM_BRANCHES: 3
+      NUM_CHANNELS: [48, 96, 192]
+      NUM_MODULES: 4
+    STAGE4:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4, 4]
+      NUM_BRANCHES: 4
+      NUM_CHANNELS: [48, 96, 192, 384]
+      NUM_MODULES: 3
+  NAME: seg_hrnet
+  PRETRAINED: pretrained_models/hrnetv2_w48_imagenet_pretrained.pth
+OUTPUT_DIR: /home/data2/zhy/HRnet_face_parsing/tools/output
+PIN_MEMORY: True
+PRINT_FREQ: 100
+RANK: 0
+TEST:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 1
+  CENTER_CROP_TEST: False
+  FLIP_TEST: False
+  IMAGE_SIZE: [480, 480]
+  MODEL_FILE: 
+  MULTI_SCALE: False
+  NUM_SAMPLES: 0
+  SCALE_LIST: [1]
+TRAIN:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 4
+  BEGIN_EPOCH: 0
+  DOWNSAMPLERATE: 1
+  END_EPOCH: 200
+  EXTRA_EPOCH: 0
+  EXTRA_LR: 0.001
+  FLIP: True
+  IGNORE_LABEL: -1
+  IMAGE_SIZE: [480, 480]
+  LR: 0.004
+  LR_FACTOR: 0.1
+  LR_STEP: [90, 110]
+  MOMENTUM: 0.9
+  MULTI_SCALE: True
+  NESTEROV: False
+  NUM_SAMPLES: 0
+  OPTIMIZER: sgd
+  RESUME: True
+  SCALE_FACTOR: 16
+  SHUFFLE: True
+  WD: 0.0001
+WORKERS: 4
+2020-05-21 10:31:52,267 Namespace(cfg='/home/data2/zhy/HRnet_face_parsing/experiments/vschallenge/seg_hrnet_w48_cls17_480x480_sgd_lr4e-3_wd1e-4_bs_16_epoch200.yaml', local_rank=2, opts=[])
+2020-05-21 10:31:52,267 AUTO_RESUME: False
+CUDNN:
+  BENCHMARK: True
+  DETERMINISTIC: False
+  ENABLED: True
+DATASET:
+  DATASET: vschallenge
+  EXTRA_TRAIN_SET: 
+  NUM_CLASSES: 17
+  ROOT: /home/data2/DATASET/vschallenge
+  TEST_SET: val
+  TRAIN_SET: train
+DEBUG:
+  DEBUG: False
+  SAVE_BATCH_IMAGES_GT: False
+  SAVE_BATCH_IMAGES_PRED: False
+  SAVE_HEATMAPS_GT: False
+  SAVE_HEATMAPS_PRED: False
+GPUS: (0, 1, 2, 3)
+LOG_DIR: /home/data2/zhy/HRnet_face_parsing/tools/log
+LOSS:
+  CLASS_BALANCE: True
+  OHEMKEEP: 131072
+  OHEMTHRES: 0.9
+  USE_OHEM: False
+MODEL:
+  EXTRA:
+    FINAL_CONV_KERNEL: 1
+    STAGE1:
+      BLOCK: BOTTLENECK
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4]
+      NUM_CHANNELS: [64]
+      NUM_MODULES: 1
+      NUM_RANCHES: 1
+    STAGE2:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4]
+      NUM_BRANCHES: 2
+      NUM_CHANNELS: [48, 96]
+      NUM_MODULES: 1
+    STAGE3:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4]
+      NUM_BRANCHES: 3
+      NUM_CHANNELS: [48, 96, 192]
+      NUM_MODULES: 4
+    STAGE4:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4, 4]
+      NUM_BRANCHES: 4
+      NUM_CHANNELS: [48, 96, 192, 384]
+      NUM_MODULES: 3
+  NAME: seg_hrnet
+  PRETRAINED: pretrained_models/hrnetv2_w48_imagenet_pretrained.pth
+OUTPUT_DIR: /home/data2/zhy/HRnet_face_parsing/tools/output
+PIN_MEMORY: True
+PRINT_FREQ: 100
+RANK: 0
+TEST:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 1
+  CENTER_CROP_TEST: False
+  FLIP_TEST: False
+  IMAGE_SIZE: [480, 480]
+  MODEL_FILE: 
+  MULTI_SCALE: False
+  NUM_SAMPLES: 0
+  SCALE_LIST: [1]
+TRAIN:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 4
+  BEGIN_EPOCH: 0
+  DOWNSAMPLERATE: 1
+  END_EPOCH: 200
+  EXTRA_EPOCH: 0
+  EXTRA_LR: 0.001
+  FLIP: True
+  IGNORE_LABEL: -1
+  IMAGE_SIZE: [480, 480]
+  LR: 0.004
+  LR_FACTOR: 0.1
+  LR_STEP: [90, 110]
+  MOMENTUM: 0.9
+  MULTI_SCALE: True
+  NESTEROV: False
+  NUM_SAMPLES: 0
+  OPTIMIZER: sgd
+  RESUME: True
+  SCALE_FACTOR: 16
+  SHUFFLE: True
+  WD: 0.0001
+WORKERS: 4
+2020-05-21 10:31:52,328 Namespace(cfg='/home/data2/zhy/HRnet_face_parsing/experiments/vschallenge/seg_hrnet_w48_cls17_480x480_sgd_lr4e-3_wd1e-4_bs_16_epoch200.yaml', local_rank=0, opts=[])
+2020-05-21 10:31:52,328 AUTO_RESUME: False
+CUDNN:
+  BENCHMARK: True
+  DETERMINISTIC: False
+  ENABLED: True
+DATASET:
+  DATASET: vschallenge
+  EXTRA_TRAIN_SET: 
+  NUM_CLASSES: 17
+  ROOT: /home/data2/DATASET/vschallenge
+  TEST_SET: val
+  TRAIN_SET: train
+DEBUG:
+  DEBUG: False
+  SAVE_BATCH_IMAGES_GT: False
+  SAVE_BATCH_IMAGES_PRED: False
+  SAVE_HEATMAPS_GT: False
+  SAVE_HEATMAPS_PRED: False
+GPUS: (0, 1, 2, 3)
+LOG_DIR: /home/data2/zhy/HRnet_face_parsing/tools/log
+LOSS:
+  CLASS_BALANCE: True
+  OHEMKEEP: 131072
+  OHEMTHRES: 0.9
+  USE_OHEM: False
+MODEL:
+  EXTRA:
+    FINAL_CONV_KERNEL: 1
+    STAGE1:
+      BLOCK: BOTTLENECK
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4]
+      NUM_CHANNELS: [64]
+      NUM_MODULES: 1
+      NUM_RANCHES: 1
+    STAGE2:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4]
+      NUM_BRANCHES: 2
+      NUM_CHANNELS: [48, 96]
+      NUM_MODULES: 1
+    STAGE3:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4]
+      NUM_BRANCHES: 3
+      NUM_CHANNELS: [48, 96, 192]
+      NUM_MODULES: 4
+    STAGE4:
+      BLOCK: BASIC
+      FUSE_METHOD: SUM
+      NUM_BLOCKS: [4, 4, 4, 4]
+      NUM_BRANCHES: 4
+      NUM_CHANNELS: [48, 96, 192, 384]
+      NUM_MODULES: 3
+  NAME: seg_hrnet
+  PRETRAINED: pretrained_models/hrnetv2_w48_imagenet_pretrained.pth
+OUTPUT_DIR: /home/data2/zhy/HRnet_face_parsing/tools/output
+PIN_MEMORY: True
+PRINT_FREQ: 100
+RANK: 0
+TEST:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 1
+  CENTER_CROP_TEST: False
+  FLIP_TEST: False
+  IMAGE_SIZE: [480, 480]
+  MODEL_FILE: 
+  MULTI_SCALE: False
+  NUM_SAMPLES: 0
+  SCALE_LIST: [1]
+TRAIN:
+  BASE_SIZE: 520
+  BATCH_SIZE_PER_GPU: 4
+  BEGIN_EPOCH: 0
+  DOWNSAMPLERATE: 1
+  END_EPOCH: 200
+  EXTRA_EPOCH: 0
+  EXTRA_LR: 0.001
+  FLIP: True
+  IGNORE_LABEL: -1
+  IMAGE_SIZE: [480, 480]
+  LR: 0.004
+  LR_FACTOR: 0.1
+  LR_STEP: [90, 110]
+  MOMENTUM: 0.9
+  MULTI_SCALE: True
+  NESTEROV: False
+  NUM_SAMPLES: 0
+  OPTIMIZER: sgd
+  RESUME: True
+  SCALE_FACTOR: 16
+  SHUFFLE: True
+  WD: 0.0001
+WORKERS: 4
+2020-05-21 10:31:52,951 => init weights from normal distribution
+2020-05-21 10:31:52,952 => init weights from normal distribution
+2020-05-21 10:31:52,954 => init weights from normal distribution
+2020-05-21 10:31:53,114 => init weights from normal distribution
+2020-05-21 10:32:05,562 
+Total Parameters: 65,857,937
+----------------------------------------------------------------------------------------------------------------------------------
+Total Multiply Adds (For Convolution and Linear Layers only): 76.46484375 GFLOPs
+----------------------------------------------------------------------------------------------------------------------------------
+Number of Layers
+Conv2d : 307 layers   BatchNorm2d : 306 layers   ReLU : 269 layers   Bottleneck : 4 layers   BasicBlock : 104 layers   HighResolutionModule : 8 layers   

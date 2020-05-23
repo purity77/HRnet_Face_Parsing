@@ -26,9 +26,12 @@ import models
 import datasets
 from config import config
 from config import update_config
-from core.function import testval, test
-from utils.modelsummary import get_model_summary
-from utils.utils import create_logger, FullModel
+from lib.core.function import testval, test
+from lib.utils.modelsummary import get_model_summary
+from lib.utils.utils import create_logger, FullModel
+
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "6,7,8,9"
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train segmentation network')
@@ -75,9 +78,13 @@ def main():
     else:
         model_state_file = os.path.join(final_output_dir,
                                         'final_state.pth')
+    # model_state_file = os.path.join(final_output_dir,
+    #                                 'checkpoint.pth.tar')
     logger.info('=> loading model from {}'.format(model_state_file))
         
     pretrained_dict = torch.load(model_state_file)
+    # pretrained_dict = torch.load(model_state_file,
+    #                         map_location=lambda storage, loc: storage)
     model_dict = model.state_dict()
     pretrained_dict = {k[6:]: v for k, v in pretrained_dict.items()
                         if k[6:] in model_dict.keys()}
@@ -113,22 +120,27 @@ def main():
     
     start = timeit.default_timer()
     if 'val' in config.DATASET.TEST_SET:
-        mean_IoU, IoU_array, pixel_acc, mean_acc = testval(config, 
-                                                           test_dataset, 
-                                                           testloader, 
-                                                           model)
-    
+        mean_IoU, IoU_array, pixel_acc, mean_acc = testval(config,
+                                                           test_dataset,
+                                                           testloader,
+                                                           model,
+                                                           sv_dir='output/vschallenge/res_test',
+                                                           sv_pred=True,
+                                                           )
+
         msg = 'MeanIU: {: 4.4f}, Pixel_Acc: {: 4.4f}, \
-            Mean_Acc: {: 4.4f}, Class IoU: '.format(mean_IoU, 
+            Mean_Acc: {: 4.4f}, Class IoU: '.format(mean_IoU,
             pixel_acc, mean_acc)
         logging.info(msg)
         logging.info(IoU_array)
     elif 'test' in config.DATASET.TEST_SET:
-        test(config, 
-             test_dataset, 
-             testloader, 
+        test(config,
+             test_dataset,
+             testloader,
              model,
-             sv_dir=final_output_dir)
+             sv_dir='/home/data2/zhy/test',
+             sv_pred=True,
+             )
 
     end = timeit.default_timer()
     logger.info('Mins: %d' % np.int((end-start)/60))

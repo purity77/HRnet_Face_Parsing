@@ -72,13 +72,6 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="omnisky@222.23.212.248:22 (1)">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="sa">
         <serverdata>
           <mappings>
