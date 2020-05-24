@@ -12,8 +12,8 @@ dist
 build
 
 # log and output
-*tools/*log/
-*tools/*output/
-*res/
-*ouput/
-*log/
+tools/log/
+tools/output/
+res/
+ouput/
+log/
