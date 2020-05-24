@@ -15,5 +15,6 @@ build
 tools/log/
 tools/output/
 res/
-ouput/
+output/
 log/
+test_set_a
