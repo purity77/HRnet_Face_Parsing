@@ -1,2 +1,19 @@
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# log and output
 */tools/*log/
 */tools/*output/
+*/res/
+*/ouput/
+*/res/
