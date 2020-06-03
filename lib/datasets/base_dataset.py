@@ -46,6 +46,7 @@ class BaseDataset(data.Dataset):
         image /= self.std
         return image
 
+
     def label_transform(self, label):
         return np.array(label).astype('int32')
 

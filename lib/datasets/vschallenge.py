@@ -21,7 +21,7 @@ class VsChallenge(BaseDataset):
                  num_classes=59,
                  multi_scale=True,
                  flip=True,
-                 ignore_label=-1,
+                 ignore_label=0,
                  base_size=520,
                  crop_size=(480, 480),
                  downsample_rate=1,
@@ -38,35 +38,66 @@ class VsChallenge(BaseDataset):
         self.multi_scale = multi_scale
         self.crop_size = crop_size
         self.class_weights = None
-        self.num_classes = num_classes
-
         self.imgs = os.listdir(os.path.join(self.rootpth, self.mode, 'jpg1'))
 
-        self.label_mapping = {-1: ignore_label, 0: ignore_label,
-                              1: ignore_label, 2: ignore_label,
-                              3: ignore_label, 4: ignore_label,
-                              5: ignore_label, 6: ignore_label,
-                              7: 0, 8: 1, 9: ignore_label,
-                              10: ignore_label, 11: 2, 12: 3,
-                              13: 4, 14: ignore_label, 15: ignore_label,
-                              16: ignore_label, 17: 5, 18: ignore_label,
-                              19: 6, 20: 7, 21: 8, 22: 9, 23: 10, 24: 11,
-                              25: 12, 26: 13, 27: 14, 28: 15,
-                              29: ignore_label, 30: ignore_label,
-                              31: 16, 32: 17, 33: 18}
+    def resize_image(self, image, label, size):
+        image = cv2.resize(image, size, interpolation=cv2.INTER_LINEAR)
+        label = cv2.resize(label, size, interpolation=cv2.INTER_NEAREST)
+        return image, label
+
+    def inverse_transform(self, image):
+        image_vis = image.copy()
+        image_vis = image_vis * np.reshape(self.std, [3, 1, 1])
+        image_vis = image_vis * np.reshape(self.mean, [3, 1, 1])
+        image_vis *= 255.0
+        image_vis = image_vis.copy().astype(np.uint8)
+        return image_vis
+
+    def color_label(self, image, label, name, ouput_dir):
+        part_colors = [[255, 0, 0], [255, 85, 0], [255, 170, 0],
+                       [255, 0, 85], [255, 0, 170],
+                       [0, 255, 0], [85, 255, 0], [170, 255, 0],
+                       [0, 255, 85], [0, 255, 170],
+                       [0, 0, 255], [85, 0, 255], [170, 0, 255],
+                       [0, 85, 255], [0, 170, 255],
+                       [255, 255, 0], [255, 255, 85], [255, 255, 170],
+                       [255, 0, 255], [255, 85, 255], [255, 170, 255],
+                       [0, 255, 255], [85, 255, 255], [170, 255, 255]]
+        vislabel_batch = label.copy().astype(np.uint8)
+        vislabel = np.squeeze(vislabel_batch)
+        label_save = vislabel.copy()
+        # (480,480)->(480,480,3)
+        vislabel = np.expand_dims(vislabel, axis=2)
+        vislabel = vislabel.repeat(3, axis=2)
+        num_of_class = np.max(vislabel)
+        image = np.transpose(image, (1, 2, 0))
+        for pi in range(0, num_of_class + 1):
+            index = np.where(vislabel == pi)
+            #  if np.sum(index) != 0:  # 看坐标索引是不是没有
+            vislabel[index[0], index[1], :] = part_colors[pi]
+
+        vislabel = vislabel.astype(np.uint8)
+        # vis_im = cv2.addWeighted(cv2.cvtColor(image, cv2.COLOR_RGB2BGR), 0.2, vislabel, 0.8, 0)
+        cv2.imwrite(osp.join(ouput_dir, name[0][:-4] + '_label.jpg'), vislabel)
+        # cv2.imwrite(osp.join(ouput_dir, name[0][:-4] + '_img.jpg'), image)
+        cv2.imwrite(osp.join(ouput_dir, name[0][:-4] + '.png'), label_save)
+
+    def save_pred(self, preds, image, sv_path, name):
+        preds = preds.cpu().numpy().copy()
+        image_batch = image.cpu().numpy().copy()
+        image = np.reshape(image_batch, [3, image_batch.shape[2], image_batch.shape[3]])
+        image = self.inverse_transform(image)
+        preds = np.asarray(np.argmax(preds, axis=1), dtype=np.uint8)
+        self.color_label(image, label=preds, name=name, ouput_dir=sv_path)
 
     def __getitem__(self, idx):
         name = self.imgs[idx]
         image = cv2.imread(osp.join(self.rootpth, self.mode, 'jpg1', name), cv2.IMREAD_COLOR)
-        label = cv2.imread(osp.join(self.rootpth, self.mode, 'mask1', name[:-3] + 'png'), cv2.IMREAD_GRAYSCALE)
-        size = image.shape
-
-        # if 'test' in self.list_path:
-        if self.mode == 'test':
-            image = self.input_transform(image)
-            image = image.transpose((2, 0, 1))
-
-            return image.copy(), np.array(size), name
+        if self.mode != 'test':
+            label = cv2.imread(osp.join(self.rootpth, self.mode, 'mask1', name[:-3] + 'png'), cv2.IMREAD_GRAYSCALE)
+            size = label.shape
+        else:
+            size = image.shape
 
         # multi scale 增强
         if self.mode == 'val':
@@ -75,8 +106,12 @@ class VsChallenge(BaseDataset):
             image, label = self.resize_image(image, label, self.crop_size)
             image = self.input_transform(image)
             image = image.transpose((2, 0, 1))
-
             return image.copy(), label.copy(), np.array(size), name
+
+        if self.mode == 'test':
+            image = self.input_transform(image)
+            image = image.transpose((2, 0, 1))
+            return image.copy(), np.array(size), name
 
         if self.flip:
             flip = np.random.choice(2) * 2 - 1
@@ -93,62 +128,12 @@ class VsChallenge(BaseDataset):
                     label[left_pos[0], left_pos[1]] = right_idx[i]
 
         image, label = self.resize_image(image, label, self.crop_size)
+        # self.color_label(image, label, name, '/home/data2/miles/HRNet_Parsing/res')
         image, label = self.gen_sample(image, label, self.multi_scale, False)
+        # image_vis = self.inverse_transform(image)
+        # self.color_label(image_vis, label, name, '/home/data2/miles/HRNet_Parsing/res')
 
         return image.copy(), label.copy(), np.array(size), name
 
     def __len__(self):
         return len(self.imgs)
-
-    def resize_image(self, image, label, size):
-        image = cv2.resize(image, size, interpolation=cv2.INTER_LINEAR)
-        label = cv2.resize(label, size, interpolation=cv2.INTER_NEAREST)
-        return image, label
-
-    def convert_label(self, label, inverse=False):
-        temp = label.copy()
-        if inverse:
-            for v, k in self.label_mapping.items():
-                label[temp == k] = v
-        else:
-            for k, v in self.label_mapping.items():
-                label[temp == k] = v
-        return label
-
-    def get_palette(self, n):
-        palette = [0] * (n * 3)
-        for j in range(0, n):
-            lab = j
-            palette[j * 3 + 0] = 0
-            palette[j * 3 + 1] = 0
-            palette[j * 3 + 2] = 0
-            i = 0
-            while lab:
-                palette[j * 3 + 0] |= (((lab >> 0) & 1) << (7 - i))
-                palette[j * 3 + 1] |= (((lab >> 1) & 1) << (7 - i))
-                palette[j * 3 + 2] |= (((lab >> 2) & 1) << (7 - i))
-                i += 1
-                lab >>= 3
-        return palette
-
-    def save_pred(self, preds, sv_path, name):
-        palette = self.get_palette(256)
-        preds = preds.cpu().numpy().copy()
-        preds = np.asarray(np.argmax(preds, axis=1), dtype=np.uint8)
-        for i in range(preds.shape[0]):
-
-            pred1 = preds[i]
-            pred = self.convert_label(preds[i], inverse=True)
-
-            save_img = Image.fromarray(pred)
-            save_img.save(os.path.join(sv_path, 'mask', name[i][:-4]+'.png'))
-
-            save_img.putpalette(palette)
-            save_img.save(os.path.join(sv_path, 'color', name[i][:-4]+'.png'))
-
-            # save_img1 = Image.fromarray(pred1)
-            # save_img1.putpalette(palette)
-            # save_img1.save(os.path.join(sv_path, name[i]+'_no_convert.png'))
-
-
-

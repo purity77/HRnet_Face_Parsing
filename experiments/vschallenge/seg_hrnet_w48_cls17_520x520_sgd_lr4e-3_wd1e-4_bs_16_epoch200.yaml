@@ -2,7 +2,7 @@ CUDNN:
   BENCHMARK: true
   DETERMINISTIC: false
   ENABLED: true
-GPUS: (0, 1, 2, 3)
+GPUS: (0, )
 OUTPUT_DIR: '/home/data2/miles/HRNet_Parsing/output'
 LOG_DIR: '/home/data2/miles/HRNet_Parsing/log'
 WORKERS: 6

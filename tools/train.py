@@ -30,7 +30,7 @@ from core.function import train, validate
 from utils.modelsummary import get_model_summary
 from utils.utils import create_logger, FullModel, get_rank
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "4,5,6,7"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0, 1, 2, 3"
 
 
 def parse_args():
@@ -91,7 +91,7 @@ def main():
         # models_dst_dir = os.path.join(final_output_dir, 'models')
         # if os.path.exists(models_dst_dir):
         #     shutil.rmtree(models_dst_dir)
-        # shutil.copytree(os.path.join(this_dir, '../lib/models'), models_dst_dir)
+        # shutil.copytree(os.path.join(this_dir, 'lib/models'), models_dst_dir)
 
     if distributed:
         torch.cuda.set_device(args.local_rank)

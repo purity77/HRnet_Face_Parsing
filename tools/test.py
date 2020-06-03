@@ -14,7 +14,7 @@ import logging
 import time
 import timeit
 from pathlib import Path
-
+import os
 import numpy as np
 
 import torch
@@ -26,16 +26,15 @@ import models
 import datasets
 from config import config
 from config import update_config
-from lib.core.function import testval, test
-from lib.utils.modelsummary import get_model_summary
-from lib.utils.utils import create_logger, FullModel
+from core.function import testval, test
+from utils.modelsummary import get_model_summary
+from utils.utils import create_logger, FullModel
 
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "6,7,8,9"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train segmentation network')
-    
+
     parser.add_argument('--cfg',
                         help='experiment configure file name',
                         required=True,
@@ -49,6 +48,7 @@ def parse_args():
     update_config(config, args)
 
     return args
+
 
 def main():
     args = parse_args()
@@ -65,7 +65,7 @@ def main():
     cudnn.enabled = config.CUDNN.ENABLED
 
     # build model
-    model = eval('models.'+config.MODEL.NAME +
+    model = eval('models.' + config.MODEL.NAME +
                  '.get_seg_model')(config)
 
     dump_input = torch.rand(
@@ -77,17 +77,13 @@ def main():
         model_state_file = config.TEST.MODEL_FILE
     else:
         model_state_file = os.path.join(final_output_dir,
-                                        'final_state.pth')
-    # model_state_file = os.path.join(final_output_dir,
-    #                                 'checkpoint.pth.tar')
+                                        'best.pth')
     logger.info('=> loading model from {}'.format(model_state_file))
-        
+
     pretrained_dict = torch.load(model_state_file)
-    # pretrained_dict = torch.load(model_state_file,
-    #                         map_location=lambda storage, loc: storage)
     model_dict = model.state_dict()
     pretrained_dict = {k[6:]: v for k, v in pretrained_dict.items()
-                        if k[6:] in model_dict.keys()}
+                       if k[6:] in model_dict.keys()}
     for k, _ in pretrained_dict.items():
         logger.info(
             '=> loading {} from pretrained model'.format(k))
@@ -99,17 +95,17 @@ def main():
 
     # prepare data
     test_size = (config.TEST.IMAGE_SIZE[1], config.TEST.IMAGE_SIZE[0])
-    test_dataset = eval('datasets.'+config.DATASET.DATASET)(
-                        root=config.DATASET.ROOT,
-                        list_path=config.DATASET.TEST_SET,
-                        num_samples=None,
-                        num_classes=config.DATASET.NUM_CLASSES,
-                        multi_scale=False,
-                        flip=False,
-                        ignore_label=config.TRAIN.IGNORE_LABEL,
-                        base_size=config.TEST.BASE_SIZE,
-                        crop_size=test_size,
-                        downsample_rate=1)
+    test_dataset = eval('datasets.' + config.DATASET.DATASET)(
+        root=config.DATASET.ROOT,
+        list_path=config.DATASET.TEST_SET,
+        num_samples=None,
+        num_classes=config.DATASET.NUM_CLASSES,
+        multi_scale=False,
+        flip=False,
+        ignore_label=config.TRAIN.IGNORE_LABEL,
+        base_size=config.TEST.BASE_SIZE,
+        crop_size=test_size,
+        downsample_rate=1)
 
     testloader = torch.utils.data.DataLoader(
         test_dataset,
@@ -117,20 +113,17 @@ def main():
         shuffle=False,
         num_workers=config.WORKERS,
         pin_memory=True)
-    
+
     start = timeit.default_timer()
     if 'val' in config.DATASET.TEST_SET:
         mean_IoU, IoU_array, pixel_acc, mean_acc = testval(config,
                                                            test_dataset,
                                                            testloader,
-                                                           model,
-                                                           sv_dir='output/vschallenge/res_test',
-                                                           sv_pred=True,
-                                                           )
+                                                           model)
 
         msg = 'MeanIU: {: 4.4f}, Pixel_Acc: {: 4.4f}, \
             Mean_Acc: {: 4.4f}, Class IoU: '.format(mean_IoU,
-            pixel_acc, mean_acc)
+                                                    pixel_acc, mean_acc)
         logging.info(msg)
         logging.info(IoU_array)
     elif 'test' in config.DATASET.TEST_SET:
@@ -138,12 +131,11 @@ def main():
              test_dataset,
              testloader,
              model,
-             sv_dir='/home/data2/zhy/test',
-             sv_pred=True,
-             )
+             sv_dir='/home/data2/miles/HRNet_Parsing/res',
+             sv_pred=True)
 
     end = timeit.default_timer()
-    logger.info('Mins: %d' % np.int((end-start)/60))
+    logger.info('Mins: %d' % np.int((end - start) / 60))
     logger.info('Done')
 
 
