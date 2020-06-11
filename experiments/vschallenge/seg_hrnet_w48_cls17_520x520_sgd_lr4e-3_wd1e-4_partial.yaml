@@ -6,18 +6,17 @@ GPUS: (0, 1, 2, 3)
 OUTPUT_DIR: '/home/data2/miles/HRNet_Parsing/output'
 LOG_DIR: '/home/data2/miles/HRNet_Parsing/log'
 WORKERS: 6
-PRINT_FREQ: 10
+PRINT_FREQ: 50
 
 DATASET:
-  DATASET: vschallenge
+  DATASET: vspartial
   ROOT: '/home/data2/DATASET/vschallenge'
   TEST_SET: 'val'
   TRAIN_SET: 'train'
   NUM_CLASSES: 17
 MODEL:
-  NAME: seg_hrnet_ocr
-  NUM_OUTPUTS: 2
-  PRETRAINED: '/home/data2/miles/HRNet_Parsing/pretrained_models/hrnetv2_w48_imagenet_pretrained.pth'
+  NAME: seg_hrnet
+  PRETRAINED: '/home/data2/miles/HRNet_Parsing/pretrained_models/best_7454.pth'
   EXTRA:
     FINAL_CONV_KERNEL: 1
     STAGE1:
@@ -72,20 +71,19 @@ LOSS:
   USE_OHEM: true
   OHEMTHRES: 0.9
   OHEMKEEP: 131072
-  BALANCE_WEIGHTS: [0.4, 1]
 TRAIN:
   IMAGE_SIZE:
-  - 520
-  - 520
-  BASE_SIZE: 520
-  BATCH_SIZE_PER_GPU: 4
+  - 100
+  - 100
+  BASE_SIZE: 100
+  BATCH_SIZE_PER_GPU: 32
   SHUFFLE: true
   BEGIN_EPOCH: 0
   END_EPOCH: 400
   RESUME: true
   OPTIMIZER: sgd
-  LR: 0.007
-  WD: 0.0005
+  LR: 0.004
+  WD: 0.0001
   MOMENTUM: 0.9
   NESTEROV: false
   FLIP: true
@@ -95,9 +93,9 @@ TRAIN:
   SCALE_FACTOR: 20
 TEST:
   IMAGE_SIZE:
-  - 520
-  - 520
-  BASE_SIZE: 520
-  BATCH_SIZE_PER_GPU: 16
+  - 100
+  - 100
+  BASE_SIZE: 100
+  BATCH_SIZE_PER_GPU: 32
   FLIP_TEST: false
   MULTI_SCALE: false

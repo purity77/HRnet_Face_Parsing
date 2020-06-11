@@ -19,3 +19,4 @@ output/
 log/
 test_set_a
 pretrained_models/
+test_set_final/

@@ -25,12 +25,13 @@ import models
 import datasets
 from config import config
 from config import update_config
-from core.criterion import CrossEntropy, OhemCrossEntropy
+from core.criterion import CrossEntropy, OhemCrossEntropy, LovaszSoftmaxLoss
 from core.function import train, validate
 from utils.modelsummary import get_model_summary
 from utils.utils import create_logger, FullModel, get_rank
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0, 1, 2, 3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1, 2, 3, 4"
+# os.environ['CUDA_VISIBLE_DEVICES'] = '4'
 
 
 def parse_args():
@@ -184,6 +185,8 @@ def main():
         sampler=test_sampler)
 
     # criterion
+    # self use
+    # criterion = LovaszSoftmaxLoss(ignore_label=config.TRAIN.IGNORE_LABEL)
     if config.LOSS.USE_OHEM:
         criterion = OhemCrossEntropy(ignore_label=config.TRAIN.IGNORE_LABEL,
                                      thres=config.LOSS.OHEMTHRES,

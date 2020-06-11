@@ -3,10 +3,13 @@
 # Licensed under the MIT License.
 # Written by Ke Sun (sunk@mail.ustc.edu.cn)
 # ------------------------------------------------------------------------------
-
+from __future__ import print_function, division
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+from torch.autograd import Variable
+from itertools import filterfalse as ifilterfalse
+from .lovasz_loss import *
 
 
 class CrossEntropy(nn.Module):
@@ -58,3 +61,18 @@ class OhemCrossEntropy(nn.Module):
         pixel_losses = pixel_losses[mask][ind]
         pixel_losses = pixel_losses[pred < threshold]
         return pixel_losses.mean()
+
+
+class LovaszSoftmaxLoss(nn.Module):
+    def __init__(self, ignore_label=-1):
+        super(LovaszSoftmaxLoss, self).__init__()
+        self.ignore = ignore_label
+
+    def forward(self, score, target):
+        ph, pw = score.size(2), score.size(3)
+        h, w = target.size(1), target.size(2)
+        if ph != h or pw != w:
+            score = F.interpolate(
+                input=score, size=(h, w), mode='bilinear', align_corners=True)
+        loss = lovasz_softmax(score, target, classes='present', per_image=False, ignore=self.ignore)
+        return loss

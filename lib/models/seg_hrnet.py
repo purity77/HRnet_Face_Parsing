@@ -409,10 +409,10 @@ class HighResolutionNet(nn.Module):
         return nn.Sequential(*modules), num_inchannels
 
     def forward(self, x):
-        x = self.conv1(x)
+        x = self.conv1(x)  # OUT [4,64,260,260]
         x = self.bn1(x)
         x = self.relu(x)
-        x = self.conv2(x)
+        x = self.conv2(x)  # OUT [4,64,130,130]
         x = self.bn2(x)
         x = self.relu(x)
         x = self.layer1(x)
@@ -432,6 +432,8 @@ class HighResolutionNet(nn.Module):
             else:
                 x_list.append(y_list[i])
         y_list = self.stage3(x_list)
+        # LOCAT BBX
+        # FACIAL COMPENENT
 
         x_list = []
         for i in range(self.stage4_cfg['NUM_BRANCHES']):
